@@ -12,9 +12,10 @@ G E Bridge connects a sleek, modern web interface directly to a powerful **n8n b
 
 See G E Bridge in action\! This video covers the major features.
 
-[](https://www.google.com/search?q=https://www.youtube.com/watch%3Fv%3DYOUR_VIDEO_ID)
 
-_(This is a placeholder. Replace the image and link with your video.)_
+
+https://github.com/user-attachments/assets/bc90f311-2f94-4956-8106-4f4cc732f88b
+
 
 ---
 
