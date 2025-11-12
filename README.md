@@ -15,8 +15,11 @@ See G E Bridge in action\! This video covers the major features.
 
 
 
-https://github.com/user-attachments/assets/bc90f311-2f94-4956-8106-4f4cc732f88b
-
+<p align="center">
+  <a href="https://github.com/user-attachments/assets/bc90f311-2f94-4956-8106-4f4cc732f88b" target="_blank">
+    <img src="https://img.shields.io/badge/▶️%20Watch%20Demo-000000?style=for-the-badge&logo=github" alt="Watch Demo"/>
+  </a>
+</p>
 
 ---
 
