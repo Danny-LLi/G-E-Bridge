@@ -14,7 +14,13 @@ G E Bridge connects a sleek, modern web interface directly to a powerful **n8n b
 See G E Bridge in action\! This video covers the major features.
 
 <p align="center">
-  <a href="https://github.com/user-attachments/assets/bc90f311-2f94-4956-8106-4f4cc732f88b">🎥 Watch Full Demo</a>
+  <video src="https://github.com/user-attachments/assets/bc90f311-2f94-4956-8106-4f4cc732f88b"
+         width="600"
+         controls
+         poster="assets/demo-cover.jpg"
+         style="border-radius:12px; box-shadow:0 0 12px rgba(0,0,0,0.3);">
+      Your browser does not support the video tag.
+  </video>
 </p>
 
 
