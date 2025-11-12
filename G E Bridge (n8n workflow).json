@@ -1,0 +1,1467 @@
+{
+  "name": "G E Bridge",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "85e99a56-7fd0-4119-81af-c7e42e842fbe",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1920,
+        144
+      ],
+      "id": "a2b2c891-2468-4722-bd7b-baeb0d3435b4",
+      "name": "Webhook",
+      "webhookId": "85e99a56-7fd0-4119-81af-c7e42e842fbe"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "92212f2f-9ee6-4fd1-b31a-e2a6089ea47b",
+                    "leftValue": "={{ $json.body.type }}",
+                    "rightValue": "fetch_vocabulary",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "762703f2-9bc5-465a-99ff-9c40faaa0701",
+                    "leftValue": "={{ $json.body.type }}",
+                    "rightValue": "=vocabulary_update",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e834de8a-0d37-4c81-913a-1987a9eccbf0",
+                    "leftValue": "={{ $json.body.type }}",
+                    "rightValue": "word_submission",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -1696,
+        128
+      ],
+      "id": "547d60f2-53f5-4ede-8d41-17e67cc6f08f",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1B8I5XjVLDrOe1P_Z8eT0PnIBeM4JUlf6HUvK_zJicR8",
+          "mode": "list",
+          "cachedResultName": "English words",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1871932502,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Level": "={{ $json.status }}",
+            "English word": "={{ $json.word }}"
+          },
+          "matchingColumns": [
+            "English word"
+          ],
+          "schema": [
+            {
+              "id": "English word",
+              "displayName": "English word",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "English word translition 1",
+              "displayName": "English word translition 1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Level",
+              "displayName": "Level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -128,
+        -48
+      ],
+      "id": "0903b46e-d25b-48c4-8ee8-81f9a221aaa2",
+      "name": "English Update Row",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "r2RdSHXhWAS7vPCc",
+          "name": "Google Sheets account 9"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1_Eud523BYf-sOcVx5u6Si2wpxGlqeJ9oI47gc9B0S3U",
+          "mode": "list",
+          "cachedResultName": "German words",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 235474241,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1472,
+        -480
+      ],
+      "id": "df3f69b0-2351-47ac-87c0-c1f0881ea41c",
+      "name": "German Get Rows",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0jGVdKemI8NeRveg",
+          "name": "Google Sheets account 8"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1B8I5XjVLDrOe1P_Z8eT0PnIBeM4JUlf6HUvK_zJicR8",
+          "mode": "list",
+          "cachedResultName": "English words",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1871932502,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1472,
+        -288
+      ],
+      "id": "69e225a2-bd82-4a27-b1d3-1a7a6f3497eb",
+      "name": "English Get Rows",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "E5f2xNmPhhjDa546",
+          "name": "Google Sheets account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1_Eud523BYf-sOcVx5u6Si2wpxGlqeJ9oI47gc9B0S3U",
+          "mode": "list",
+          "cachedResultName": "German words",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 235474241,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Level": "={{ $json.status }}",
+            "German word": "={{ $json.word }}"
+          },
+          "matchingColumns": [
+            "German word"
+          ],
+          "schema": [
+            {
+              "id": "German word",
+              "displayName": "German word",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "German word translition 1",
+              "displayName": "German word translition 1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "German word translition 2",
+              "displayName": "German word translition 2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Level",
+              "displayName": "Level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -128,
+        -240
+      ],
+      "id": "5955ebfb-73c1-4cff-ac26-50cf750bcdb7",
+      "name": "German Update Row",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "r2RdSHXhWAS7vPCc",
+          "name": "Google Sheets account 9"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1248,
+        -384
+      ],
+      "id": "f8cc727f-6b53-445a-8839-65f73d4e451b",
+      "name": "Merge"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        96,
+        336
+      ],
+      "id": "1f4fbf41-2d0b-48a5-af08-3d902feebde6",
+      "name": "Merge1",
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        96,
+        -64
+      ],
+      "id": "588c9eec-ce5c-4fce-a557-7e802e70b235",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Initialize arrays for consolidated data\nconst englishArray = [];\nconst germanArray = [];\n\n// Get all incoming items\nconst allInputItems = $input.all();\n\n// Loop over all items\nfor (let i = 0; i < allInputItems.length; i++) {\n    const itemJson = allInputItems[i].json;\n    const currentId = itemJson.row_number || i + 1;\n\n    // --- 1. German ---\n    const germanWord = itemJson['German word'];\n    const germanTranslation = itemJson['German word translition 1'];\n\n    // Use 'Level' if it exists and not empty; otherwise default to 1\n    const germanStatus = (itemJson['Level'] || itemJson['Level'] === 0) ? itemJson['Level'] : 1;\n\n    if (germanWord) {\n        germanArray.push({\n            id: currentId,\n            word: germanWord,\n            translation: germanTranslation,\n            status: germanStatus\n        });\n    }\n\n    // --- 2. English ---\n    const englishWord = itemJson['English word'];\n    const englishTranslation = itemJson['English word translition 1'];\n\n    // Use 'Level' if it exists and not empty; otherwise default to 1\n    const englishStatus = (itemJson['Level'] || itemJson['Level'] === 0) ? itemJson['Level'] : 1;\n\n    if (englishWord) {\n        englishArray.push({\n            id: currentId,\n            word: englishWord,\n            translation: englishTranslation,\n            status: englishStatus\n        });\n    }\n}\n\n// Construct final output object\nconst finalOutput = {\n    english: englishArray,\n    german: germanArray\n};\n\n// Return a single item containing the aggregated JSON\nreturn [\n    { json: finalOutput }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1024,
+        -384
+      ],
+      "id": "c705b508-1d07-40dc-ae7d-d3b93113bf47",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        320,
+        144
+      ],
+      "id": "84ec0112-4d6a-4e31-aa7b-553071bb74c5",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1B8I5XjVLDrOe1P_Z8eT0PnIBeM4JUlf6HUvK_zJicR8",
+          "mode": "list",
+          "cachedResultName": "English words",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1871932502,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "English word": "={{ $json.englishArray.word }}",
+            "English word translition 1": "==GOOGLETRANSLATE(A{{ $json.englishArray.row }}, \"en\", \"de\")"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "English word",
+              "displayName": "English word",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "English word translition 1",
+              "displayName": "English word translition 1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Level",
+              "displayName": "Level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -128,
+        720
+      ],
+      "id": "5d71bd49-e6f9-4295-8ce5-3f304bb734ab",
+      "name": "English Append Row1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "r2RdSHXhWAS7vPCc",
+          "name": "Google Sheets account 9"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1_Eud523BYf-sOcVx5u6Si2wpxGlqeJ9oI47gc9B0S3U",
+          "mode": "list",
+          "cachedResultName": "German words",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 235474241,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "German word": "={{ $json.word }}",
+            "German word translition 1": "==GOOGLETRANSLATE(A{{ $json.row }}, \"de\", \"en\")"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "German word",
+              "displayName": "German word",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "German word translition 1",
+              "displayName": "German word translition 1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "German word translition 2",
+              "displayName": "German word translition 2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Level",
+              "displayName": "Level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -128,
+        912
+      ],
+      "id": "76bddb07-a1b7-4368-a8fd-dca2b9057de4",
+      "name": "German Append Row1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "r2RdSHXhWAS7vPCc",
+          "name": "Google Sheets account 9"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        96,
+        912
+      ],
+      "id": "989e3db1-1e1b-44d4-b227-5bcc4a05cd5d",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "03112e5d-09ac-411c-a38a-ba58d64c2f1a",
+              "leftValue": "={{ $json.detectedLanguage }}",
+              "rightValue": "english",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -576,
+        720
+      ],
+      "id": "88295518-ac06-4f1d-bdeb-30df53f51dc1",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "03112e5d-09ac-411c-a38a-ba58d64c2f1a",
+              "leftValue": "={{ $json.detectedLanguage }}",
+              "rightValue": "german",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -576,
+        912
+      ],
+      "id": "8001ef7a-d12a-499a-977d-4a040dd075ee",
+      "name": "Filter1"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1B8I5XjVLDrOe1P_Z8eT0PnIBeM4JUlf6HUvK_zJicR8",
+          "mode": "list",
+          "cachedResultName": "English words",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1871932502,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "startIndex": "={{ $json.body.german[0].id }}"
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -128,
+        144
+      ],
+      "id": "34630131-1e56-48a6-92b0-138e88edfd4d",
+      "name": "English Delete Row",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "r2RdSHXhWAS7vPCc",
+          "name": "Google Sheets account 9"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1_Eud523BYf-sOcVx5u6Si2wpxGlqeJ9oI47gc9B0S3U",
+          "mode": "list",
+          "cachedResultName": "German words",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 235474241,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -128,
+        336
+      ],
+      "id": "04ee2dbd-e855-45aa-bf1b-b3b6e216161a",
+      "name": "German Delete Row",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "r2RdSHXhWAS7vPCc",
+          "name": "Google Sheets account 9"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get words from the Switch node\nconst words = $('Switch').first().json.body.words || [];\n\n// Arrays\nconst englishArray = [];\nconst germanArray = [];\n\n// Compute starting row numbers from external sources + 2\nlet englishCountRow = ($('row_number English').first().json.count_row_number || 0) + 2;\nlet germanCountRow = ($('row_num German').first().json.count_row_number || 0) + 2;\n\n// Populate arrays strictly and assign row numbers\nwords.forEach(w => {\n    if (!w?.language) return;\n    const lang = w.language.toLowerCase();\n    \n    if (lang === 'english') {\n        englishArray.push({ ...w, row: englishCountRow });\n        englishCountRow++; // increment row for next word\n    }\n    \n    if (lang === 'german') {\n        germanArray.push({ ...w, row: germanCountRow });\n        germanCountRow++; // increment row for next word\n    }\n});\n\n// Assign detectedLanguage\nconst englishDetected = englishArray.length > 0 ? 'english' : 'empty';\nconst germanDetected = germanArray.length > 0 ? 'german' : 'empty';\n\n// Return arrays + final row numbers + detectedLanguage\nreturn [\n    { \n        json: { \n            englishArray, \n            finalCountRow: englishCountRow - 1, // last assigned row\n            detectedLanguage: englishDetected \n        } \n    },\n    { \n        json: { \n            germanArray, \n            finalCountRow: germanCountRow - 1, // last assigned row\n            detectedLanguage: germanDetected \n        } \n    }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        912
+      ],
+      "id": "c4a0ab6e-9402-4e00-ac69-d047d36f3440",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "germanArray",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        912
+      ],
+      "id": "a1c51f35-c0a8-4ad7-8b7e-bce14d1de1d1",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "englishArray",
+        "include": "allOtherFields",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        720
+      ],
+      "id": "f8e95690-9138-4d3b-9982-e461ca0ade63",
+      "name": "Split Out1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1_Eud523BYf-sOcVx5u6Si2wpxGlqeJ9oI47gc9B0S3U",
+          "mode": "list",
+          "cachedResultName": "German words",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 235474241,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1472,
+        688
+      ],
+      "id": "f4a129dd-b210-4f06-83c7-e9fa5f16b8dc",
+      "name": "German Get Rows1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0jGVdKemI8NeRveg",
+          "name": "Google Sheets account 8"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1B8I5XjVLDrOe1P_Z8eT0PnIBeM4JUlf6HUvK_zJicR8",
+          "mode": "list",
+          "cachedResultName": "English words",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1871932502,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1472,
+        912
+      ],
+      "id": "e9f6515e-1c20-4565-b483-0cfc371cf211",
+      "name": "English Get Rows1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "E5f2xNmPhhjDa546",
+          "name": "Google Sheets account 7"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1024,
+        912
+      ],
+      "id": "402cf042-0343-40a7-91d8-020edd0b9e2b",
+      "name": "Merge4"
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "field": "row_number"
+            }
+          ]
+        },
+        "fieldsToSplitBy": "=",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.summarize",
+      "typeVersion": 1.1,
+      "position": [
+        -1248,
+        912
+      ],
+      "id": "d84e75e4-cafc-4d3a-a70a-4d4b31c853a6",
+      "name": "row_number English"
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "field": "row_number"
+            }
+          ]
+        },
+        "fieldsToSplitBy": "=",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.summarize",
+      "typeVersion": 1.1,
+      "position": [
+        -1248,
+        688
+      ],
+      "id": "a629d208-3995-43ae-adfb-0d47b8adba18",
+      "name": "row_num German"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.german[0].action }}",
+                    "rightValue": "UPDATE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "d9a20aba-43fc-4185-8c7a-6e6cafcf485a"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d210bbda-4c79-4876-b2d1-f680aad22e28",
+                    "leftValue": "={{ $json.body.german[0].action }}",
+                    "rightValue": "DELETE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "096f6824-0ad5-40a4-be34-6d425fd9c6a9",
+                    "leftValue": "={{ $json.body.german[0].action }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "empty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -576,
+        128
+      ],
+      "id": "cd93deac-b5da-425a-baa7-51cc8d67a82e",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "errorMessage": "An error occurred!"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        528
+      ],
+      "id": "3642a658-ad96-427a-9a90-9785e47c3fec",
+      "name": "Stop and Error"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        544,
+        144
+      ],
+      "id": "26d82f49-3c65-4fe4-8ad8-379c2e3b2db3",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body.german",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        -240
+      ],
+      "id": "e4e7974e-a70e-4bb2-becf-bf3a00274857",
+      "name": "Split Out2"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body.english",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        -48
+      ],
+      "id": "7a459782-160c-4d35-a24c-f9acf33d6fdf",
+      "name": "Split Out3"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body.german",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        336
+      ],
+      "id": "15e8c6e1-db38-468c-b2c2-db8a8b227f74",
+      "name": "Split Out4",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body.english",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        144
+      ],
+      "id": "f6aee926-17b5-4f8f-8eca-533a41f13b92",
+      "name": "Split Out5",
+      "disabled": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "English Get Rows",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "German Get Rows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "German Get Rows1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "English Get Rows1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "English Update Row": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "German Get Rows": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "English Get Rows": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "German Update Row": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "English Append Row1": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "German Append Row1": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "English Delete Row": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "German Delete Row": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "English Append Row1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "German Append Row1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "German Get Rows1": {
+      "main": [
+        [
+          {
+            "node": "row_num German",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "English Get Rows1": {
+      "main": [
+        [
+          {
+            "node": "row_number English",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge4": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "row_number English": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "row_num German": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Split Out3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Split Out2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Split Out5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Split Out4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out2": {
+      "main": [
+        [
+          {
+            "node": "German Update Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out3": {
+      "main": [
+        [
+          {
+            "node": "English Update Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out4": {
+      "main": [
+        [
+          {
+            "node": "German Delete Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out5": {
+      "main": [
+        [
+          {
+            "node": "English Delete Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "668af9ec-2f6d-4e41-8367-22cb66aa9f6f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bde207d8cdecfbb56cf6b523f91c9052c5309807cc9f6e5db876f1332da6af32"
+  },
+  "id": "93QzEhJ9CJSTliLv",
+  "tags": []
+}

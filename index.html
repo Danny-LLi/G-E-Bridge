@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>G E Bridge</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary: #667eea;
+        --secondary: #764ba2;
+        --success: #10b981;
+        --error: #ef4444;
+        --warning: #f59e0b;
+        --dark: #0f1419;
+        --darker: #1a1a2e;
+        --card: rgba(20, 25, 35, 0.95);
+        --text: #e2e8f0;
+        --muted: #9ca3af;
+        --border: #374151;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--darker) 0%,
+          #16213e 50%,
+          var(--dark) 100%
+        );
+        min-height: 100vh;
+        color: var(--text);
+        overflow-x: hidden;
+      }
+
+      .main-wrapper {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 280px;
+        background: rgba(10, 10, 15, 0.9);
+        backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 30px 20px;
+        overflow-y: auto;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .sidebar-header {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, var(--primary), #00d9ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+
+      .sidebar-subtitle {
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-bottom: 30px;
+        font-style: italic;
+      }
+
+      .stats-card {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stats-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        background: rgba(59, 130, 246, 0.05);
+        transition: width 0.3s ease;
+      }
+
+      .stats-card:hover {
+        background: rgba(59, 130, 246, 0.15);
+        border-color: rgba(59, 130, 246, 0.6);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 123, 255, 0.15);
+      }
+
+      .stats-card:hover::before {
+        width: 100%;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      .container {
+        flex: 1;
+        padding: 40px;
+        max-width: 1600px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .header-section {
+        margin-bottom: 40px;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, var(--primary), #00d9ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        letter-spacing: -0.5px;
+      }
+
+      .subtitle {
+        color: var(--muted);
+        font-size: 1.1rem;
+      }
+
+      .section {
+        background: rgba(31, 41, 55, 0.5);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 30px;
+        transition: all 0.3s ease;
+      }
+
+      .section:hover {
+        border-color: var(--primary);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .section-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid var(--border);
+        color: var(--primary);
+      }
+
+      .webhook-config {
+        margin-bottom: 20px;
+      }
+
+      .form-label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--text);
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        background: rgba(31, 41, 55, 0.6);
+        color: var(--text);
+        font-family: monospace;
+        font-size: 13px;
+        transition: all 0.3s;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .word-input-wrapper {
+        margin-bottom: 15px;
+        display: flex;
+        gap: 12px;
+        align-items: stretch; /* Changed to stretch */
+      }
+
+      .word-input-wrapper textarea {
+        flex: 1;
+        padding: 12px;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        font-size: 15px;
+        background: rgba(31, 41, 55, 0.6);
+        color: var(--text);
+        transition: all 0.3s;
+        resize: vertical;
+        min-height: 80px;
+        max-height: 200px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        line-height: 1.5;
+      }
+
+      .word-input-wrapper textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .lang-toggle {
+        display: flex;
+        flex-direction: column; /* Changed to column for vertical stacking */
+        background: rgba(31, 41, 55, 0.8);
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        padding: 4px;
+        width: 60px; /* Fixed width for the toggle */
+        min-height: 80px; /* Match textarea min-height */
+        gap: 4px; /* Space between buttons */
+      }
+
+      .lang-toggle button {
+        flex: 1; /* Each button takes equal space */
+        padding: 8px 4px;
+        border: none;
+        background: transparent;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.3s;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        writing-mode: horizontal-tb; /* Ensure text is horizontal */
+      }
+
+      .lang-toggle button.active {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+      }
+
+      .word-input-wrapper textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .word-input-wrapper .lang-toggle {
+        flex-shrink: 0;
+      }
+
+      /* ADD THIS NEW SECTION */
+      .word-input-wrapper textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        font-size: 15px;
+        background: rgba(31, 41, 55, 0.6);
+        color: var(--text);
+        transition: all 0.3s;
+        resize: vertical;
+        min-height: 80px;
+        max-height: 200px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        line-height: 1.5;
+      }
+
+      .word-input-wrapper input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+      }
+
+      /* ADD THIS TOO */
+      .word-input-wrapper textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .word-input-wrapper input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .lang-toggle {
+        display: flex;
+        background: rgba(31, 41, 55, 0.8);
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        padding: 4px;
+        width: 140px;
+      }
+
+      .lang-toggle button {
+        flex: 1;
+        padding: 8px;
+        border: none;
+        background: transparent;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        color: #6c757d;
+      }
+
+      .lang-toggle button.active {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        transition: left 0.3s ease;
+      }
+
+      .btn:hover::before {
+        left: 0;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        width: 100%;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+      }
+
+      .btn-primary:disabled {
+        background: var(--muted);
+        box-shadow: none;
+        transform: none;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      .btn-success {
+        background: linear-gradient(135deg, var(--success), #059669);
+        color: white;
+      }
+
+      .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(16, 185, 129, 0.3);
+      }
+
+      .btn-icon {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--primary);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      .btn-icon:hover {
+        background: rgba(59, 130, 246, 0.25);
+        border-color: var(--primary);
+      }
+
+      .word-list {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-top: 15px;
+      }
+
+      .word-item {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        background: rgba(31, 41, 55, 0.6);
+        border-radius: 8px;
+        margin-bottom: 8px;
+        border-left: 4px solid transparent;
+        transition: all 0.3s;
+      }
+
+      .word-item.english {
+        border-left-color: #667eea;
+      }
+
+      .word-item.german {
+        border-left-color: #f59e0b;
+      }
+
+      .word-item:hover {
+        background: rgba(31, 41, 55, 0.8);
+        transform: translateX(5px);
+      }
+
+      .word-text {
+        flex: 1;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .word-lang {
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-right: 10px;
+      }
+
+      .word-lang.english {
+        background: rgba(102, 126, 234, 0.2);
+        color: #667eea;
+      }
+
+      .word-lang.german {
+        background: rgba(245, 158, 11, 0.2);
+        color: #f59e0b;
+      }
+
+      .word-item button {
+        background: rgba(239, 68, 68, 0.15);
+        color: var(--error);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.3s;
+      }
+
+      .word-item button:hover {
+        background: var(--error);
+        color: white;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: var(--muted);
+      }
+
+      .empty-state svg {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 15px;
+        opacity: 0.3;
+      }
+
+      .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 16px 24px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        animation: slideIn 0.3s ease-out;
+        z-index: 1000;
+        max-width: 400px;
+        max-height: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        backdrop-filter: blur(20px);
+        white-space: nowrap;
+      }
+
+      .notification.success {
+        background: linear-gradient(135deg, var(--success), #059669);
+        border-left: 4px solid var(--success);
+      }
+
+      .notification.error {
+        background: linear-gradient(135deg, var(--error), #dc2626);
+        border-left: 4px solid var(--error);
+      }
+
+      .notification.warning {
+        background: linear-gradient(135deg, var(--warning), #d97706);
+        border-left: 4px solid var(--warning);
+      }
+
+      .notification.info {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-left: 4px solid var(--primary);
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideOut {
+        to {
+          opacity: 0;
+          transform: translateX(400px);
+        }
+      }
+
+      .slide-out {
+        animation: slideOut 0.3s ease forwards;
+      }
+
+      .loading-spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 0.8s linear infinite;
+        margin-left: 10px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .vocab-section {
+        margin-bottom: 30px;
+      }
+
+      .vocab-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid var(--border);
+      }
+
+      .vocab-header h3 {
+        font-size: 1.3rem;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .vocab-count {
+        font-size: 0.9rem;
+        color: var(--muted);
+        font-weight: normal;
+      }
+
+      .filter-container {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .filter-btn {
+        padding: 6px 14px;
+        border: 2px solid var(--border);
+        background: rgba(31, 41, 55, 0.6);
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        transition: all 0.3s;
+        color: var(--muted);
+      }
+
+      .filter-btn:hover {
+        transform: scale(1.05);
+        border-color: var(--primary);
+      }
+
+      .filter-btn.active {
+        color: white;
+        border-color: transparent;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .filter-btn.all.active {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+      }
+
+      .filter-btn.level-1.active {
+        background: #ef4444;
+      }
+
+      .filter-btn.level-2.active {
+        background: #f59e0b;
+      }
+
+      .filter-btn.level-3.active {
+        background: #3b82f6;
+      }
+
+      .filter-btn.level-4.active {
+        background: #10b981;
+      }
+
+      .vocab-list {
+        max-height: 600px;
+        overflow-y: auto;
+      }
+
+      .vocab-row {
+        display: grid;
+        grid-template-columns: 2fr auto 2fr auto;
+        gap: 15px;
+        padding: 15px;
+        background: rgba(31, 41, 55, 0.6);
+        border-radius: 8px;
+        margin-bottom: 10px;
+        transition: all 0.3s;
+        border-left: 4px solid transparent;
+        align-items: center; /* Changed back to center */
+      }
+
+      /* Add this new rule right after .vocab-row */
+      .vocab-row > * {
+        align-self: start; /* Force all children to align at the top */
+      }
+
+      .vocab-row .status-buttons {
+        align-self: center; /* But keep status buttons centered */
+      }
+
+      .vocab-row.modified {
+        border-left-color: var(--warning);
+        background: rgba(245, 158, 11, 0.1);
+      }
+
+      .vocab-row:hover {
+        background: rgba(31, 41, 55, 0.8);
+        transform: scale(1.01);
+      }
+
+      .vocab-word {
+        font-weight: 600;
+        color: var(--text);
+        word-break: break-word;
+        font-size: 1rem;
+        white-space: pre-wrap;
+        line-height: 1.6;
+        max-width: 100%;
+        overflow-wrap: break-word;
+        display: flex;
+        align-items: flex-start; /* Align content to start */
+      }
+
+      .status-buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        min-width: 180px;
+      }
+
+      .status-btn {
+        padding: 10px 8px; /* Increased from 8px */
+        border: 2px solid var(--border);
+        background: rgba(31, 41, 55, 0.6);
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 600;
+        transition: all 0.3s;
+        text-align: center;
+        color: var(--muted);
+        min-height: 36px; /* Add minimum height */
+      }
+
+      .status-btn:hover {
+        transform: scale(1.1);
+      }
+
+      .status-btn.active {
+        transform: scale(1.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .status-btn.level-1 {
+        border-color: #ef4444;
+      }
+      .status-btn.level-1.active {
+        background: #ef4444;
+        color: white;
+        border-color: #ef4444;
+      }
+
+      .status-btn.level-2 {
+        border-color: #f59e0b;
+      }
+      .status-btn.level-2.active {
+        background: #f59e0b;
+        color: white;
+        border-color: #f59e0b;
+      }
+
+      .status-btn.level-3 {
+        border-color: #3b82f6;
+      }
+      .status-btn.level-3.active {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+      }
+
+      .status-btn.level-4 {
+        border-color: #10b981;
+      }
+      .status-btn.level-4.active {
+        background: #10b981;
+        color: white;
+        border-color: #10b981;
+      }
+
+      .vocab-translation {
+        font-size: 0.95rem;
+        color: var(--muted);
+        word-break: break-word;
+        filter: blur(4px);
+        transition: filter 0.3s;
+        user-select: none;
+        white-space: pre-wrap;
+        line-height: 1.6;
+        overflow-wrap: break-word;
+        display: flex;
+        align-items: flex-start; /* Align content to start */
+      }
+
+      .vocab-row:hover .vocab-translation {
+        filter: blur(0px);
+        user-select: text;
+      }
+
+      .delete-btn {
+        background: rgba(239, 68, 68, 0.15);
+        color: var(--error);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 12px;
+        transition: all 0.3s;
+        white-space: nowrap;
+      }
+
+      .delete-btn:hover {
+        background: var(--error);
+        color: white;
+        transform: scale(1.05);
+      }
+
+      .save-section {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid var(--border);
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(31, 41, 55, 0.5);
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--secondary);
+      }
+
+      .modified-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: var(--warning);
+        border-radius: 50%;
+        margin-left: 5px;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      /* NEW: Level Statistics Styles */
+      .level-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+      }
+
+      .level-stat-card {
+        background: rgba(31, 41, 55, 0.6);
+        border-radius: 8px;
+        padding: 8px 4px;
+        text-align: center;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .level-stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .level-stat-card:hover::before {
+        left: 100%;
+      }
+
+      .level-stat-card:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .level-stat-card.level-1 {
+        border-color: rgba(239, 68, 68, 0.4);
+        background: rgba(239, 68, 68, 0.1);
+      }
+
+      .level-stat-card.level-1:hover {
+        border-color: #ef4444;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+      }
+
+      .level-stat-card.level-2 {
+        border-color: rgba(245, 158, 11, 0.4);
+        background: rgba(245, 158, 11, 0.1);
+      }
+
+      .level-stat-card.level-2:hover {
+        border-color: #f59e0b;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+      }
+
+      .level-stat-card.level-3 {
+        border-color: rgba(59, 130, 246, 0.4);
+        background: rgba(59, 130, 246, 0.1);
+      }
+
+      .level-stat-card.level-3:hover {
+        border-color: #3b82f6;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+      }
+
+      .level-stat-card.level-4 {
+        border-color: rgba(16, 185, 129, 0.4);
+        background: rgba(16, 185, 129, 0.1);
+      }
+
+      .level-stat-card.level-4:hover {
+        border-color: #10b981;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+      }
+
+      .level-stat-value {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 2px;
+      }
+
+      .level-stat-card.level-1 .level-stat-value {
+        color: #ef4444;
+      }
+
+      .level-stat-card.level-2 .level-stat-value {
+        color: #f59e0b;
+      }
+
+      .level-stat-card.level-3 .level-stat-value {
+        color: #3b82f6;
+      }
+
+      .level-stat-card.level-4 .level-stat-value {
+        color: #10b981;
+      }
+
+      .level-stat-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.5;
+          transform: scale(1.2);
+        }
+      }
+
+      /* Touch-friendly improvements */
+      @media (hover: none) and (pointer: coarse) {
+        .btn,
+        .status-btn,
+        .filter-btn,
+        .delete-btn {
+          min-height: 44px;
+          min-width: 44px;
+        }
+
+        .status-btn {
+          padding: 10px;
+        }
+
+        .word-item button {
+          min-height: 36px;
+          min-width: 36px;
+        }
+      }
+
+      /* Prevent text selection on buttons */
+      .btn,
+      .status-btn,
+      .filter-btn,
+      .delete-btn {
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+      }
+
+      @media (max-width: 1024px) {
+        .main-wrapper {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+          border-right: none;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 15px;
+          padding: 20px;
+        }
+
+        .sidebar-header,
+        .sidebar-subtitle {
+          grid-column: 1 / -1;
+          text-align: center;
+        }
+
+        .container {
+          padding: 30px 20px;
+        }
+
+        .vocab-row {
+          grid-template-columns: 1fr auto;
+          gap: 12px;
+        }
+
+        .vocab-translation {
+          grid-column: 1 / -1;
+        }
+
+        .delete-btn {
+          grid-column: 2;
+          grid-row: 1;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          grid-template-columns: 1fr;
+          padding: 15px;
+        }
+
+        .stats-card {
+          margin-bottom: 10px;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .subtitle {
+          font-size: 1rem;
+        }
+
+        .container {
+          padding: 20px 15px;
+        }
+
+        .section {
+          padding: 20px 15px;
+        }
+
+        .section-title {
+          font-size: 1.1rem;
+        }
+
+        .vocab-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 15px;
+        }
+
+        .vocab-header h3 {
+          font-size: 1.1rem;
+        }
+
+        .filter-container {
+          width: 100%;
+          justify-content: flex-start;
+          overflow-x: auto;
+          padding-bottom: 5px;
+        }
+
+        .filter-btn {
+          flex-shrink: 0;
+        }
+
+        .vocab-row {
+          grid-template-columns: 1fr;
+          padding: 12px;
+        }
+
+        .status-buttons {
+          width: 100%;
+          min-width: auto;
+        }
+
+        .vocab-translation {
+          font-size: 0.9rem;
+        }
+
+        .word-input-wrapper {
+          flex-direction: row; /* Keep horizontal on mobile too */
+          align-items: stretch;
+        }
+
+        .lang-toggle {
+          width: 50px; /* Slightly narrower on mobile */
+          min-height: 80px;
+        }
+        .lang-toggle button {
+          font-size: 12px;
+          padding: 6px 2px;
+        }
+
+        .notification {
+          left: 10px;
+          right: 10px;
+          max-width: calc(100% - 20px);
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 1.6rem;
+        }
+
+        .subtitle {
+          font-size: 0.9rem;
+        }
+
+        .container {
+          padding: 15px 10px;
+        }
+
+        .section {
+          padding: 15px 10px;
+          margin-bottom: 20px;
+        }
+
+        .section-title {
+          font-size: 1rem;
+        }
+
+        .vocab-header h3 {
+          font-size: 1rem;
+        }
+
+        .status-buttons {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
+        }
+
+        .status-btn {
+          padding: 10px 8px;
+          font-size: 12px;
+        }
+
+        .vocab-word {
+          font-size: 0.95rem;
+        }
+
+        .btn {
+          padding: 14px 20px;
+          font-size: 14px;
+        }
+
+        .form-input {
+          font-size: 14px;
+          padding: 10px;
+        }
+
+        .word-input-wrapper input {
+          font-size: 14px;
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-wrapper">
+      <aside class="sidebar">
+        <div class="sidebar-header">🌉 G E Bridge</div>
+        <div class="sidebar-subtitle">German ⇄ English</div>
+
+        <div class="stats-card">
+          <div class="stat-value" id="pendingCount">0</div>
+          <div class="stat-label">Pending Words</div>
+        </div>
+
+        <div class="stats-card">
+          <div class="stat-value" id="totalCount">0</div>
+          <div class="stat-label">Total Submitted</div>
+        </div>
+
+        <div class="stats-card">
+          <div class="stat-value" id="modifiedCount">0</div>
+          <div class="stat-label">Modified Items</div>
+        </div>
+
+        <!-- NEW: Language Level Statistics -->
+        <div
+          style="
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+          "
+        >
+          <div
+            style="
+              font-size: 0.9rem;
+              font-weight: 600;
+              color: var(--muted);
+              margin-bottom: 15px;
+              text-align: center;
+            "
+          >
+            📊 Level Distribution
+          </div>
+
+          <!-- English Stats -->
+          <div style="margin-bottom: 20px">
+            <div
+              style="
+                font-size: 0.75rem;
+                color: var(--muted);
+                margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+              "
+            >
+              🇬🇧 <span style="font-weight: 600">English</span>
+            </div>
+            <div class="level-stats-grid">
+              <div class="level-stat-card level-1">
+                <div class="level-stat-value" id="englishLevel1">0</div>
+                <div class="level-stat-label">L1</div>
+              </div>
+              <div class="level-stat-card level-2">
+                <div class="level-stat-value" id="englishLevel2">0</div>
+                <div class="level-stat-label">L2</div>
+              </div>
+              <div class="level-stat-card level-3">
+                <div class="level-stat-value" id="englishLevel3">0</div>
+                <div class="level-stat-label">L3</div>
+              </div>
+              <div class="level-stat-card level-4">
+                <div class="level-stat-value" id="englishLevel4">0</div>
+                <div class="level-stat-label">L4</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- German Stats -->
+          <div>
+            <div
+              style="
+                font-size: 0.75rem;
+                color: var(--muted);
+                margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+              "
+            >
+              🇩🇪 <span style="font-weight: 600">German</span>
+            </div>
+            <div class="level-stats-grid">
+              <div class="level-stat-card level-1">
+                <div class="level-stat-value" id="germanLevel1">0</div>
+                <div class="level-stat-label">L1</div>
+              </div>
+              <div class="level-stat-card level-2">
+                <div class="level-stat-value" id="germanLevel2">0</div>
+                <div class="level-stat-label">L2</div>
+              </div>
+              <div class="level-stat-card level-3">
+                <div class="level-stat-value" id="germanLevel3">0</div>
+                <div class="level-stat-label">L3</div>
+              </div>
+              <div class="level-stat-card level-4">
+                <div class="level-stat-value" id="germanLevel4">0</div>
+                <div class="level-stat-label">L4</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="container">
+        <div class="header-section">
+          <h1>🌉 G E Bridge</h1>
+          <p class="subtitle">Your German-English Vocabulary Bridge</p>
+        </div>
+
+        <!-- Webhook Configuration -->
+        <div class="section">
+          <div class="section-title">🔗 Webhook Configuration</div>
+          <div class="webhook-config">
+            <label class="form-label">n8n Webhook URL</label>
+            <input
+              type="text"
+              id="webhookUrl"
+              class="form-input"
+              placeholder="https://your-n8n-instance.com/webhook/your-webhook-id"
+            />
+            <p style="font-size: 0.85rem; color: var(--muted); margin-top: 8px">
+              💾 Automatically saved using cookies
+            </p>
+          </div>
+        </div>
+
+        <!-- Word Submission -->
+        <div class="section">
+          <div class="section-title">📝 Submit New Words</div>
+
+          <div class="word-input-wrapper">
+            <textarea
+              id="wordInput"
+              placeholder="Enter a word to add... (supports multiple lines)"
+              rows="4"
+            ></textarea>
+            <div class="lang-toggle">
+              <button class="active" data-lang="english">🇬🇧 EN</button>
+              <button data-lang="german">🇩🇪 DE</button>
+            </div>
+          </div>
+
+          <button class="btn btn-icon" id="addWordBtn">➕ Add to List</button>
+
+          <div class="word-list" id="wordList">
+            <div class="empty-state">
+              <svg fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                <path
+                  fill-rule="evenodd"
+                  d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <p>No words added yet. Start building your vocabulary!</p>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" id="submitWordsBtn">
+            <span>🚀 Submit All Words</span>
+          </button>
+        </div>
+
+        <!-- Fetch Vocabulary Button -->
+        <div class="section">
+          <div class="section-title">📚 Your Vocabulary Lists</div>
+          <p class="subtitle" style="margin-bottom: 20px">
+            Fetch, view, and update your learning progress
+          </p>
+
+          <button
+            class="btn btn-success"
+            id="fetchVocabBtn"
+            style="width: 100%; margin-bottom: 20px"
+          >
+            <span>🔄 Fetch Vocabulary from n8n</span>
+          </button>
+        </div>
+
+        <!-- English Vocabulary -->
+        <div class="section vocab-section">
+          <div class="vocab-header">
+            <h3>
+              🇬🇧 English Vocabulary
+              <span class="vocab-count" id="englishCount">(0)</span>
+            </h3>
+            <div class="filter-container">
+              <button
+                class="filter-btn all active"
+                data-filter="all"
+                data-lang="english"
+              >
+                All
+              </button>
+              <button
+                class="filter-btn level-1"
+                data-filter="1"
+                data-lang="english"
+              >
+                1
+              </button>
+              <button
+                class="filter-btn level-2"
+                data-filter="2"
+                data-lang="english"
+              >
+                2
+              </button>
+              <button
+                class="filter-btn level-3"
+                data-filter="3"
+                data-lang="english"
+              >
+                3
+              </button>
+              <button
+                class="filter-btn level-4"
+                data-filter="4"
+                data-lang="english"
+              >
+                4
+              </button>
+            </div>
+          </div>
+          <div class="vocab-list" id="englishVocabList">
+            <div class="empty-state">
+              <p style="font-size: 0.9rem">
+                Click "Fetch Vocabulary" to load your words
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- German Vocabulary -->
+        <div class="section vocab-section">
+          <div class="vocab-header">
+            <h3>
+              🇩🇪 German Vocabulary
+              <span class="vocab-count" id="germanCount">(0)</span>
+            </h3>
+            <div class="filter-container">
+              <button
+                class="filter-btn all active"
+                data-filter="all"
+                data-lang="german"
+              >
+                All
+              </button>
+              <button
+                class="filter-btn level-1"
+                data-filter="1"
+                data-lang="german"
+              >
+                1
+              </button>
+              <button
+                class="filter-btn level-2"
+                data-filter="2"
+                data-lang="german"
+              >
+                2
+              </button>
+              <button
+                class="filter-btn level-3"
+                data-filter="3"
+                data-lang="german"
+              >
+                3
+              </button>
+              <button
+                class="filter-btn level-4"
+                data-filter="4"
+                data-lang="german"
+              >
+                4
+              </button>
+            </div>
+          </div>
+          <div class="vocab-list" id="germanVocabList">
+            <div class="empty-state">
+              <p style="font-size: 0.9rem">
+                Click "Fetch Vocabulary" to load your words
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Save Progress -->
+        <div class="section">
+          <div class="save-section">
+            <button
+              class="btn btn-primary"
+              id="saveProgressBtn"
+              style="width: 100%"
+            >
+              <span>💾 Save All Changes</span>
+            </button>
+            <p
+              style="
+                font-size: 0.85rem;
+                color: var(--muted);
+                margin-top: 10px;
+                text-align: center;
+              "
+            >
+              Updates status levels and saves modifications back to Excel via
+              n8n
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="notificationContainer"></div>
+
+    <script>
+      // localStorage utilities (replacing cookies)
+      function saveToStorage(key, value) {
+        try {
+          localStorage.setItem(key, value);
+          return true;
+        } catch (e) {
+          console.error("Storage error:", e);
+          return false;
+        }
+      }
+
+      function getFromStorage(key) {
+        try {
+          return localStorage.getItem(key);
+        } catch (e) {
+          console.error("Storage error:", e);
+          return null;
+        }
+      }
+
+      // Sound effects
+      const audioContext = new (window.AudioContext ||
+        window.webkitAudioContext)();
+
+      function playSound(freq, duration, type = "sine", volume = 0.2) {
+        if (!audioContext) return;
+        const now = audioContext.currentTime;
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        osc.frequency.value = freq;
+        osc.type = type;
+        gain.gain.setValueAtTime(volume, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+        osc.start(now);
+        osc.stop(now + duration);
+      }
+
+      function playSubmitSound() {
+        playSound(523.25, 0.12);
+        setTimeout(() => playSound(659.25, 0.12), 100);
+        setTimeout(() => playSound(783.99, 0.18), 200);
+      }
+
+      function playErrorSound() {
+        playSound(150, 0.2, "square", 0.25);
+      }
+
+      function playSuccessSound() {
+        playSound(783.99, 0.12);
+        setTimeout(() => playSound(987.77, 0.2), 140);
+      }
+
+      function playClickSound() {
+        playSound(440, 0.05, "square", 0.1);
+      }
+
+      // State Management
+      let pendingWords = [];
+      let currentLang = "english";
+      let totalSubmitted = 0;
+      let englishVocab = [];
+      let germanVocab = [];
+      let modifiedWords = new Set();
+      let englishFilter = "all";
+      let germanFilter = "all";
+
+      // DOM Elements
+      const wordInput = document.getElementById("wordInput");
+      const addWordBtn = document.getElementById("addWordBtn");
+      const wordList = document.getElementById("wordList");
+      const submitWordsBtn = document.getElementById("submitWordsBtn");
+      const webhookUrl = document.getElementById("webhookUrl");
+      const fetchVocabBtn = document.getElementById("fetchVocabBtn");
+      const saveProgressBtn = document.getElementById("saveProgressBtn");
+      const englishVocabList = document.getElementById("englishVocabList");
+      const germanVocabList = document.getElementById("germanVocabList");
+      const pendingCountEl = document.getElementById("pendingCount");
+      const totalCountEl = document.getElementById("totalCount");
+      const modifiedCountEl = document.getElementById("modifiedCount");
+      const englishCountEl = document.getElementById("englishCount");
+      const germanCountEl = document.getElementById("germanCount");
+      const notificationContainer = document.getElementById(
+        "notificationContainer"
+      );
+
+      // Language Toggle Handler
+      document.querySelectorAll(".lang-toggle button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".lang-toggle button")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentLang = btn.dataset.lang;
+          playClickSound();
+        });
+      });
+
+      // Filter Button Handlers
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const lang = btn.dataset.lang;
+          const filter = btn.dataset.filter;
+
+          // Update active state for this language's filters
+          document
+            .querySelectorAll(`.filter-btn[data-lang="${lang}"]`)
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          // Set filter for the language
+          if (lang === "english") {
+            englishFilter = filter;
+            renderVocabList(
+              englishVocab,
+              englishVocabList,
+              "english",
+              englishFilter
+            );
+          } else {
+            germanFilter = filter;
+            renderVocabList(
+              germanVocab,
+              germanVocabList,
+              "german",
+              germanFilter
+            );
+          }
+
+          updateStats(); // ADD THIS LINE - Update stats when filter changes
+
+          playClickSound();
+        });
+      });
+
+      // Notification System
+      function showNotification(message, type = "success") {
+        const notification = document.createElement("div");
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        notificationContainer.appendChild(notification);
+
+        setTimeout(() => {
+          notification.classList.add("slide-out");
+          setTimeout(() => notification.remove(), 300);
+        }, 4000);
+      }
+
+      // Update Statistics
+      function updateStats() {
+        pendingCountEl.textContent = pendingWords.length;
+        totalCountEl.textContent = totalSubmitted;
+        modifiedCountEl.textContent = modifiedWords.size;
+
+        // Count level statistics for English
+        const englishLevel1 = englishVocab.filter(
+          (v) => v.status === 1 && !v.deleted
+        ).length;
+        const englishLevel2 = englishVocab.filter(
+          (v) => v.status === 2 && !v.deleted
+        ).length;
+        const englishLevel3 = englishVocab.filter(
+          (v) => v.status === 3 && !v.deleted
+        ).length;
+        const englishLevel4 = englishVocab.filter(
+          (v) => v.status === 4 && !v.deleted
+        ).length;
+
+        // Count level statistics for German
+        const germanLevel1 = germanVocab.filter(
+          (v) => v.status === 1 && !v.deleted
+        ).length;
+        const germanLevel2 = germanVocab.filter(
+          (v) => v.status === 2 && !v.deleted
+        ).length;
+        const germanLevel3 = germanVocab.filter(
+          (v) => v.status === 3 && !v.deleted
+        ).length;
+        const germanLevel4 = germanVocab.filter(
+          (v) => v.status === 4 && !v.deleted
+        ).length;
+
+        // Update level stat displays
+        document.getElementById("englishLevel1").textContent = englishLevel1;
+        document.getElementById("englishLevel2").textContent = englishLevel2;
+        document.getElementById("englishLevel3").textContent = englishLevel3;
+        document.getElementById("englishLevel4").textContent = englishLevel4;
+
+        document.getElementById("germanLevel1").textContent = germanLevel1;
+        document.getElementById("germanLevel2").textContent = germanLevel2;
+        document.getElementById("germanLevel3").textContent = germanLevel3;
+        document.getElementById("germanLevel4").textContent = germanLevel4;
+
+        // Count filtered items
+        // Count filtered items (excluding deleted)
+        let englishDisplayCount;
+        if (englishFilter === "all") {
+          englishDisplayCount = englishVocab.filter(
+            (item) => !item.deleted
+          ).length;
+        } else {
+          englishDisplayCount = englishVocab.filter(
+            (item) => item.status === parseInt(englishFilter) && !item.deleted
+          ).length;
+        }
+
+        let germanDisplayCount;
+        if (germanFilter === "all") {
+          germanDisplayCount = germanVocab.filter(
+            (item) => !item.deleted
+          ).length;
+        } else {
+          germanDisplayCount = germanVocab.filter(
+            (item) => item.status === parseInt(germanFilter) && !item.deleted
+          ).length;
+        }
+
+        englishCountEl.textContent = `(${englishDisplayCount})`;
+        germanCountEl.textContent = `(${germanDisplayCount})`;
+      }
+
+      // Load webhook from localStorage
+      function loadWebhook() {
+        const saved = getFromStorage("webhookUrl");
+        if (saved) {
+          webhookUrl.value = saved;
+          console.log("Loaded webhook from storage:", saved); // Debug log
+        }
+      }
+
+      // Save webhook to localStorage (on blur)
+      webhookUrl.addEventListener("blur", () => {
+        const url = webhookUrl.value.trim();
+        if (url) {
+          saveToStorage("webhookUrl", url);
+          showNotification("✅ Webhook URL saved!", "success");
+          playClickSound();
+        }
+      });
+
+      // Auto-save on input with debounce
+      let webhookSaveTimeout;
+      webhookUrl.addEventListener("input", () => {
+        clearTimeout(webhookSaveTimeout);
+        webhookSaveTimeout = setTimeout(() => {
+          const url = webhookUrl.value.trim();
+          if (url) {
+            saveToStorage("webhookUrl", url);
+            console.log("Auto-saved webhook:", url); // Debug log
+          }
+        }, 1000); // Save 1 second after typing stops
+      });
+
+      // Add Word to Pending List
+      function addWord() {
+        const word = wordInput.value; // Keep exact formatting including line breaks
+
+        if (word.length === 0) {
+          showNotification("⚠️ Please enter a word", "warning");
+          playErrorSound();
+          return;
+        }
+
+        pendingWords.push({
+          word: word,
+          language: currentLang,
+        });
+
+        renderWordList();
+        updateStats();
+        wordInput.value = "";
+        wordInput.focus();
+        // Truncate notification text if too long
+        const displayWord =
+          word.length > 30 ? word.substring(0, 30) + "..." : word;
+        const shortDisplay = displayWord.replace(/\n/g, " "); // Replace line breaks with spaces for notification
+        showNotification(
+          `✅ "${shortDisplay}" added to ${currentLang} list`,
+          "success"
+        );
+        playSound(550, 0.1, "sine", 0.15);
+      }
+
+      // Render Pending Words List
+      function renderWordList() {
+        if (pendingWords.length === 0) {
+          wordList.innerHTML = `
+                    <div class="empty-state">
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                        </svg>
+                        <p>No words added yet. Start building your vocabulary!</p>
+                    </div>
+                `;
+          return;
+        }
+
+        wordList.innerHTML = pendingWords
+          .map(
+            (item, index) => `
+                <div class="word-item ${item.language}">
+                    <span class="word-lang ${item.language}">${
+              item.language === "english" ? "EN" : "DE"
+            }</span>
+                    <span class="word-text" style="white-space: pre-wrap;">${
+                      item.word
+                    }</span>
+                    <button onclick="removeWord(${index})">✕</button>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      // Remove Word from Pending List
+      window.removeWord = function (index) {
+        const word = pendingWords[index].word;
+        pendingWords.splice(index, 1);
+        renderWordList();
+        updateStats();
+        showNotification(`🗑️ "${word}" removed`, "info");
+        playSound(300, 0.1, "square", 0.15);
+      };
+
+      // Submit Words to Webhook
+      async function submitWords() {
+        if (!webhookUrl.value.trim()) {
+          showNotification("❌ Please enter a webhook URL first", "error");
+          playErrorSound();
+          return;
+        }
+
+        if (pendingWords.length === 0) {
+          showNotification("⚠️ No words to submit", "warning");
+          playErrorSound();
+          return;
+        }
+
+        const originalText = submitWordsBtn.innerHTML;
+        submitWordsBtn.innerHTML =
+          '<span>Submitting...</span><span class="loading-spinner"></span>';
+        submitWordsBtn.disabled = true;
+
+        playSubmitSound();
+
+        try {
+          const response = await fetch(webhookUrl.value.trim(), {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "word_submission",
+              words: pendingWords,
+              timestamp: new Date().toISOString(),
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+
+          await response.json();
+
+          totalSubmitted += pendingWords.length;
+          showNotification(
+            `🎉 Successfully submitted ${pendingWords.length} words!`,
+            "success"
+          );
+          playSuccessSound();
+
+          pendingWords = [];
+          renderWordList();
+          updateStats();
+        } catch (error) {
+          showNotification(`❌ Error: ${error.message}`, "error");
+          playErrorSound();
+          console.error("Submission error:", error);
+        } finally {
+          submitWordsBtn.innerHTML = originalText;
+          submitWordsBtn.disabled = false;
+        }
+      }
+
+      // Fetch Vocabulary from n8n
+      async function fetchVocabulary() {
+        if (!webhookUrl.value.trim()) {
+          showNotification("❌ Please enter a webhook URL first", "error");
+          playErrorSound();
+          return;
+        }
+
+        const originalText = fetchVocabBtn.innerHTML;
+        fetchVocabBtn.innerHTML =
+          '<span>Fetching...</span><span class="loading-spinner"></span>';
+        fetchVocabBtn.disabled = true;
+
+        playSound(440, 0.1, "sine", 0.15);
+
+        try {
+          const response = await fetch(webhookUrl.value.trim(), {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "fetch_vocabulary",
+              timestamp: new Date().toISOString(),
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+
+          // ... inside fetchVocabulary ...
+          const dataArray = await response.json();
+
+          // Check if the response is an array and take the first element (the object)
+          let data = {};
+          if (Array.isArray(dataArray) && dataArray.length > 0) {
+            data = dataArray[0];
+          } else if (
+            typeof dataArray === "object" &&
+            dataArray !== null &&
+            !Array.isArray(dataArray)
+          ) {
+            // This handles the original case where the response was just the object {}
+            data = dataArray;
+          }
+
+          // Clear modified tracking when fetching fresh data
+          modifiedWords.clear();
+
+          // Process English vocabulary
+          if (data.english && Array.isArray(data.english)) {
+            // ... rest of the function ...
+            englishVocab = data.english.map((item, index) => ({
+              id: item.id || `en-${index}`,
+              word: item.word || item.text || item.term || "",
+              status: item.status || item.level || 1,
+              translation: item.translation || "",
+              originalStatus: item.status || item.level || 1,
+            }));
+            renderVocabList(
+              englishVocab,
+              englishVocabList,
+              "english",
+              englishFilter
+            );
+          } else {
+            englishVocab = [];
+            englishVocabList.innerHTML =
+              '<div class="empty-state"><p>No English vocabulary found</p></div>';
+          }
+
+          // Process German vocabulary
+          if (data.german && Array.isArray(data.german)) {
+            germanVocab = data.german.map((item, index) => ({
+              id: item.id || `de-${index}`,
+              word: item.word || item.text || item.term || "",
+              status: item.status || item.level || 1,
+              translation: item.translation || "",
+              originalStatus: item.status || item.level || 1,
+            }));
+            renderVocabList(
+              germanVocab,
+              germanVocabList,
+              "german",
+              germanFilter
+            );
+          } else {
+            germanVocab = [];
+            germanVocabList.innerHTML =
+              '<div class="empty-state"><p>No German vocabulary found</p></div>';
+          }
+
+          showNotification("✅ Vocabulary fetched successfully!", "success");
+          playSuccessSound();
+          updateStats();
+        } catch (error) {
+          showNotification(
+            `❌ Error fetching vocabulary: ${error.message}`,
+            "error"
+          );
+          playErrorSound();
+          console.error("Fetch error:", error);
+
+          englishVocabList.innerHTML =
+            '<div class="empty-state"><p style="color: var(--error);">Failed to load vocabulary</p></div>';
+          germanVocabList.innerHTML =
+            '<div class="empty-state"><p style="color: var(--error);">Failed to load vocabulary</p></div>';
+        } finally {
+          fetchVocabBtn.innerHTML = originalText;
+          fetchVocabBtn.disabled = false;
+        }
+      }
+
+      // Update status of a vocabulary item
+      window.updateStatus = function (language, index, newStatus) {
+        const vocab = language === "english" ? englishVocab : germanVocab;
+        const filter = language === "english" ? englishFilter : germanFilter;
+
+        // Get the actual item from the full vocab array
+        const actualIndex = vocab.findIndex((item, i) => {
+          if (filter === "all") return i === index;
+          const filteredItems = vocab.filter(
+            (v) => v.status === parseInt(filter)
+          );
+          return item === filteredItems[index];
+        });
+
+        if (actualIndex === -1) return;
+
+        const item = vocab[actualIndex];
+
+        if (item) {
+          item.status = newStatus;
+
+          // Track if modified
+          if (item.status !== item.originalStatus) {
+            modifiedWords.add(item.id);
+          } else {
+            modifiedWords.delete(item.id);
+          }
+
+          // Re-render the list
+          const container =
+            language === "english" ? englishVocabList : germanVocabList;
+          renderVocabList(vocab, container, language, filter);
+          updateStats();
+          playClickSound();
+        }
+      };
+
+      // Delete a vocabulary item
+      window.deleteVocabItem = function (language, index) {
+        const vocab = language === "english" ? englishVocab : germanVocab;
+        const filter = language === "english" ? englishFilter : germanFilter;
+
+        // Get filtered items
+        const filteredVocab =
+          filter === "all"
+            ? vocab
+            : vocab.filter((item) => item.status === parseInt(filter));
+
+        const item = filteredVocab[index];
+
+        if (item && confirm(`Delete "${item.word}"?`)) {
+          // Mark as deleted (keep in array for webhook)
+          item.status = 0;
+          item.deleted = true;
+          item.markedForDeletion = true; // Clear flag for webhook
+          modifiedWords.add(item.id);
+
+          // Re-render to hide deleted items visually
+          const container =
+            language === "english" ? englishVocabList : germanVocabList;
+          renderVocabList(vocab, container, language, filter);
+
+          showNotification(
+            `🗑️ "${item.word}" marked for deletion - save to confirm`,
+            "warning"
+          );
+          playSound(300, 0.1, "square", 0.15);
+          updateStats();
+        }
+      };
+
+      // Render Vocabulary List with status buttons and filter
+      function renderVocabList(
+        vocabArray,
+        container,
+        language,
+        filter = "all"
+      ) {
+        if (!vocabArray || vocabArray.length === 0) {
+          container.innerHTML =
+            '<div class="empty-state"><p>No vocabulary found</p></div>';
+          return;
+        }
+
+        // Filter vocabulary based on status
+        // Filter out deleted items from display, but keep in filter logic
+        const filteredVocab =
+          filter === "all"
+            ? vocabArray.filter((item) => !item.deleted)
+            : vocabArray.filter(
+                (item) => item.status === parseInt(filter) && !item.deleted
+              );
+
+        if (filteredVocab.length === 0) {
+          container.innerHTML =
+            '<div class="empty-state"><p>No items match this filter</p></div>';
+          return;
+        }
+
+        container.innerHTML = filteredVocab
+          .map((item, index) => {
+            const isModified = modifiedWords.has(item.id);
+            const modifiedClass = isModified ? "modified" : "";
+
+            return `
+                <div class="vocab-row ${modifiedClass}">
+                    <div class="vocab-word">${item.word}${
+              isModified ? '<span class="modified-indicator"></span>' : ""
+            }</div>
+                    <div class="status-buttons">
+                        <button class="status-btn level-1 ${
+                          item.status === 1 ? "active" : ""
+                        }" 
+                                onclick="updateStatus('${language}', ${index}, 1)" 
+                                title="Don't Know">1</button>
+                        <button class="status-btn level-2 ${
+                          item.status === 2 ? "active" : ""
+                        }" 
+                                onclick="updateStatus('${language}', ${index}, 2)" 
+                                title="Learning">2</button>
+                        <button class="status-btn level-3 ${
+                          item.status === 3 ? "active" : ""
+                        }" 
+                                onclick="updateStatus('${language}', ${index}, 3)" 
+                                title="Know Well">3</button>
+                        <button class="status-btn level-4 ${
+                          item.status === 4 ? "active" : ""
+                        }" 
+                                onclick="updateStatus('${language}', ${index}, 4)" 
+                                title="Mastered">4</button>
+                    </div>
+                    <div class="vocab-translation">${
+                      item.translation || "—"
+                    }</div>
+                    <button class="delete-btn" onclick="deleteVocabItem('${language}', ${index})">Delete</button>
+                </div>
+            `;
+          })
+          .join("");
+      }
+
+      // Save all changes back to n8n
+      async function saveProgress() {
+        if (!webhookUrl.value.trim()) {
+          showNotification("❌ Please enter a webhook URL first", "error");
+          playErrorSound();
+          return;
+        }
+
+        if (modifiedWords.size === 0) {
+          showNotification("⚠️ No changes to save", "warning");
+          return;
+        }
+
+        const originalText = saveProgressBtn.innerHTML;
+        saveProgressBtn.innerHTML =
+          '<span>Saving...</span><span class="loading-spinner"></span>';
+        saveProgressBtn.disabled = true;
+
+        playSubmitSound();
+
+        try {
+          // Collect all modified items
+          const modifiedEnglish = englishVocab.filter((item) =>
+            modifiedWords.has(item.id)
+          );
+          const modifiedGerman = germanVocab.filter((item) =>
+            modifiedWords.has(item.id)
+          );
+
+          const response = await fetch(webhookUrl.value.trim(), {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "vocabulary_update",
+              english: modifiedEnglish.map((item) => ({
+                id: item.id,
+                word: item.word,
+                status: item.status,
+                translation: item.translation,
+                deleted: item.deleted || false,
+                action: item.deleted ? "DELETE" : "UPDATE", // Clear action flag
+              })),
+              german: modifiedGerman.map((item) => ({
+                id: item.id,
+                word: item.word,
+                status: item.status,
+                translation: item.translation,
+                deleted: item.deleted || false,
+                action: item.deleted ? "DELETE" : "UPDATE", // Clear action flag
+              })),
+              deletedItems: {
+                english: modifiedEnglish
+                  .filter((item) => item.deleted)
+                  .map((item) => item.id),
+                german: modifiedGerman
+                  .filter((item) => item.deleted)
+                  .map((item) => item.id),
+              },
+              timestamp: new Date().toISOString(),
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+
+          await response.json();
+
+          // Clear modified tracking and update original status
+          englishVocab.forEach((item) => {
+            if (modifiedWords.has(item.id)) {
+              item.originalStatus = item.status;
+            }
+          });
+          germanVocab.forEach((item) => {
+            if (modifiedWords.has(item.id)) {
+              item.originalStatus = item.status;
+            }
+          });
+
+          modifiedWords.clear();
+
+          showNotification(
+            `💾 Successfully saved ${
+              modifiedEnglish.length + modifiedGerman.length
+            } changes!`,
+            "success"
+          );
+          playSuccessSound();
+
+          // Re-render to remove modified indicators
+          renderVocabList(
+            englishVocab,
+            englishVocabList,
+            "english",
+            englishFilter
+          );
+          renderVocabList(germanVocab, germanVocabList, "german", germanFilter);
+          updateStats();
+        } catch (error) {
+          showNotification(`❌ Error saving: ${error.message}`, "error");
+          playErrorSound();
+          console.error("Save error:", error);
+        } finally {
+          saveProgressBtn.innerHTML = originalText;
+          saveProgressBtn.disabled = false;
+        }
+      }
+
+      // Event Listeners
+      addWordBtn.addEventListener("click", addWord);
+      wordInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") addWord();
+      });
+
+      submitWordsBtn.addEventListener("click", submitWords);
+      fetchVocabBtn.addEventListener("click", fetchVocabulary);
+      saveProgressBtn.addEventListener("click", saveProgress);
+
+      // Keyboard shortcuts
+      document.addEventListener("keydown", (e) => {
+        // Ctrl/Cmd + Enter to submit pending words
+        if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+          if (pendingWords.length > 0) {
+            submitWords();
+          }
+        }
+
+        // Ctrl/Cmd + S to save progress
+        if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          if (modifiedWords.size > 0) {
+            saveProgress();
+          }
+        }
+      });
+
+      // Initialize
+      loadWebhook();
+      updateStats();
+    </script>
+  </body>
+</html>

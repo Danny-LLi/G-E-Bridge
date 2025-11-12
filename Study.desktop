@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=G E Bridge Server
+Exec=/usr/bin/mine/G_E_Bridge/start_bridge.sh
+Icon=/home/USERNAME/.local/share/icons/Studying.png
+Terminal=false
+Categories=Utility;
+StartupNotify=false
