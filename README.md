@@ -1,5 +1,8 @@
 
 ---
+<div>
+  <img align="right" width="40%" src="https://github.com/user-attachments/assets/c37fb2ee-2439-434e-9c29-627f48f3c8da">
+</div>
 
 # 🌉 G E Bridge
 
